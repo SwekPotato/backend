@@ -1,0 +1,22 @@
+#!/bin/bash
+
+rsync -avz -e \
+  "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress \
+  --exclude '.git' \
+  --exclude '.vscode' \
+  --exclude 'node_modules' \
+  --exclude '.gitignore' \
+  --exclude 'deploy' \
+  . \
+  ubuntu@backend:~/letsunite \
+\
+&& \
+\
+ssh backend NODE_ENV=production 'bash -s' <<'ENDSSH'
+  source $HOME/.nvm/nvm.sh
+  cd $HOME/letsunite
+  npm install --production
+  pm2 startOrReload ecosystem.config.js --update-env
+  pm2 save
+  pm2 list
+ENDSSH
