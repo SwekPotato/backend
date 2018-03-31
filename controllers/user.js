@@ -2,6 +2,7 @@ const express = require('express')
 const { User } = require('../models')
 const bcrypt = require('bcryptjs')
 const router = express.Router()
+const Sequelize = require('sequelize')
 
 function validEmail(email) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -37,8 +38,14 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:userId', async (req, res) => {
-    const user = await User.findById(req.params.userId)
+router.get('/:email', async (req, res) => {
+    const user = await User.findOne({
+        where: {
+            email: {
+                [Sequelize.Op.iLike]: req.params.email
+            },
+        },
+    })
     if (user) {
         res.send(user)
     } else {

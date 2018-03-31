@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
         where: {
             email: {
                 [Sequelize.Op.iLike]: req.body.email
-            }
+            },
         },
     })
     if (user) {
@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
             const token = jwt.sign({
                 userId: user.id,
             }, jwtSecret)
-            const info = {token: token, type: user.type}
+            const info = {token: token, type: user.type, ageGroup: user.ageGroup}
             res.send(info)
         } else {
             res.sendStatus(403)
