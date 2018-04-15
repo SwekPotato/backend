@@ -7,8 +7,9 @@ const User = sequelize.define('user', {
     ageGroup: { type: Sequelize.ENUM('13 - 17', '18 - 24', '25 - 44', '45 - 64'), allowNull: false },
     password: { type: Sequelize.STRING, allowNull: false},
     timezone: { type: Sequelize.ENUM('Korea', 'U.S. (PST)'), allowNull: false},
-    securityQuestion: {type: Sequelize.ENUM('What is your best friend first name?', 'What is your favorite food?', 'What is your favorite movie?'), allowNull: false},
-    securityAnswer: {type: Sequelize.STRING, allowNull: false},
+    //securityQuestion: {type: Sequelize.ENUM('What is your best friend first name?', 'What is your favorite food?', 'What is your favorite movie?'), allowNull: false},
+    //securityAnswer: {type: Sequelize.STRING, allowNull: false},
+    skypeId: { type: Sequelize.STRING, allowNull: false},
 })
 
 const Meeting = sequelize.define('meeting', {
