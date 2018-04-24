@@ -4,7 +4,7 @@ const sequelize = require('./sequelize')
 const User = sequelize.define('user', {
     name: { type: Sequelize.STRING, allowNull: false},
     email: { type: Sequelize.STRING, unique: true, allowNull: false},
-    ageGroup: { type: Sequelize.ENUM('less than 55', 'more than 55'), allowNull: false },
+    ageGroup: { type: Sequelize.ENUM('less than 55', '55 or more'), allowNull: false },
     password: { type: Sequelize.STRING, allowNull: false},
     timezone: { type: Sequelize.ENUM('Korea', 'U.S. (PST)'), allowNull: false},
     //securityQuestion: {type: Sequelize.ENUM('What is your best friend first name?', 'What is your favorite food?', 'What is your favorite movie?'), allowNull: false},
@@ -42,23 +42,39 @@ Buddy.belongsTo(User, {foreignKey: 'teacherId', targetKey: 'email'})
 User.hasMany(Buddy, {foreignKey: 'studentId', sourceKey: 'email'})
 Buddy.belongsTo(User, {foreignKey: 'studentId', targetKey: 'email'})
 
-
-const Availability = sequelize.define('availability', {
-    studentId: {type: Sequelize.STRING, allowNull: true},
-    teacherId: {type: Sequelize.STRING, allowNull: true},
+const TeacherAvailability = sequelize.define('teacherAvailability', {
+    teacherId: {type: Sequelize.STRING, allowNull: false},
     day: {type: Sequelize.ENUM(
         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
     ), allowNull: true},
     date: { type: Sequelize.DATEONLY, allowNull: false},
     startTime: {type: Sequelize.DATE, allowNull: false},
     endTime: { type: Sequelize.DATE, allowNull: false},
+    active: { type: Sequelize.BOOLEAN, allowNull: false},
 })
 
-Availability.hasMany(Meeting, {foreignKey: 'availabilityId'})
-Meeting.belongsTo(Availability, {foreignKey: 'availabilityId'})
+TeacherAvailability.hasMany(Meeting, {foreignKey: 'availabilityId'})
+Meeting.belongsTo(TeacherAvailability, {foreignKey: 'availabilityId'})
 
-User.hasMany(Availability, {foreignKey: 'teacherId', sourceKey: 'email'})
-Availability.belongsTo(User, {foreignKey: 'teacherId', sourceKey: 'email'})
+User.hasMany(TeacherAvailability, {foreignKey: 'teacherId', sourceKey: 'email'})
+TeacherAvailability.belongsTo(User, {foreignKey: 'teacherId', sourceKey: 'email'})
+
+const StudentAvailability = sequelize.define('studentAvailability', {
+    studentId: {type: Sequelize.STRING, allowNull: false},
+    day: {type: Sequelize.ENUM(
+        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+    ), allowNull: true},
+    date: { type: Sequelize.DATEONLY, allowNull: false},
+    startTime: {type: Sequelize.DATE, allowNull: false},
+    endTime: { type: Sequelize.DATE, allowNull: false},
+    active: { type: Sequelize.BOOLEAN, allowNull: false},
+})
+
+StudentAvailability.hasMany(Meeting, {foreignKey: 'availabilityId'})
+Meeting.belongsTo(StudentAvailability, {foreignKey: 'availabilityId'})
+
+User.hasMany(StudentAvailability, {foreignKey: 'studentId', sourceKey: 'email'})
+StudentAvailability.belongsTo(User, {foreignKey: 'studentId', sourceKey: 'email'})
 
 const Topic = sequelize.define('topic', {
     name: { type: Sequelize.STRING, allowNull: false, unique: true },
@@ -72,7 +88,8 @@ sequelize.sync({force: false})
 module.exports = { 
     User,
     Meeting,
-    Availability,
+    StudentAvailability,
+    TeacherAvailability,
     Buddy,
     Topic,
 }

@@ -13,7 +13,17 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    const meetings = await Meeting.findAll()
+    let id;
+    if(req.user.ageGroup == "less than 55") {
+        id = "studentId";
+    } else {
+        id = "teacherId";
+    }
+    const meetings = await Meeting.findAll({
+        where: {
+            [id]: req.user.email,
+        }
+    })
     if (meetings.length !== 0) {
         res.send(meetings)
     } else {
