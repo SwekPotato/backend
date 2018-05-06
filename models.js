@@ -6,7 +6,7 @@ const User = sequelize.define('user', {
     email: { type: Sequelize.STRING, unique: true, allowNull: false},
     ageGroup: { type: Sequelize.ENUM('less than 55', '55 or more'), allowNull: false },
     password: { type: Sequelize.STRING, allowNull: false},
-    timezone: { type: Sequelize.ENUM('Korea', 'U.S. (PST)'), allowNull: false},
+    timezone: { type: Sequelize.ENUM('Korea', 'U.S. (PST)'), allowNull: true},
     //securityQuestion: {type: Sequelize.ENUM('What is your best friend first name?', 'What is your favorite food?', 'What is your favorite movie?'), allowNull: false},
     //securityAnswer: {type: Sequelize.STRING, allowNull: false},
     skypeId: { type: Sequelize.STRING, allowNull: false},

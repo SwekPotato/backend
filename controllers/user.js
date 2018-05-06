@@ -54,6 +54,7 @@ router.get('/:email', async (req, res) => {
 })
 
 router.patch('/:userId', async (req, res) => {
+    console.log("userid:", req.params.userId)
     const user = await User.findById(req.params.userId)
     if (user) {
         if (req.body.password) {
@@ -63,6 +64,26 @@ router.patch('/:userId', async (req, res) => {
         res.send(newUser)
     } else {
         res.sendStatus(404)
+    }
+})
+
+router.patch('/:userId/changePassword', async (req, res) => {
+    console.log("userid:", req.params.userId)
+    const user = await User.findById(req.params.userId)
+    if (user) {
+        console.log("newPassword:", req.body.password)
+        console.log("newPassword:", req.body.newPassword)
+        // Check whether the password is valid.
+        if (bcrypt.compareSync(req.body.password, user.password)) {
+          const newPassword = bcrypt.hashSync(req.body.newPassword, 8)
+          console.log("newPassword")
+          await user.update({ password: newPassword })
+          res.sendStatus(200) // success
+        } else {
+          res.sendStatus(400) // client error
+        }
+    } else {
+        res.sendStatus(404) // not found
     }
 })
 

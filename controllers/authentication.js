@@ -22,7 +22,8 @@ router.post('/login', async (req, res) => {
                 email: user.email,
                 ageGroup: user.ageGroup,
             }, jwtSecret)
-            const info = {token: token, type: user.type, ageGroup: user.ageGroup}
+            const info = {token: token, type: user.type,
+                          ageGroup: user.ageGroup, id: user.id}
             res.send(info)
         } else {
             res.sendStatus(403)
